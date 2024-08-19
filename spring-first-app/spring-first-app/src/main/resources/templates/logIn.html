@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic Page Needs -->
+    <meta charset="UTF-8">
+    <title>Log In</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT -->
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+
+<div class="header">
+    <a href="/">
+        <img src="/images/logo.png" alt="Logo">
+    </a>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="one-half column" style="margin-top: 25%">
+            <h4>Log In</h4>
+            <!-- Display error messages based on the error parameter -->
+            <div th:if="${param.error}">
+                <p style="color: red;">This email is not registered or the password is not correct.</p>
+            </div>
+            <form method="post" action="/login" onsubmit="storeUserEmail()">
+                <label for="email">Email</label>
+                <input class="u-full-width" type="email" placeholder="test@mailbox.com" id="email" name="email" required>
+
+                <label for="password">Password</label>
+                <input class="u-full-width" type="password" placeholder="Password" id="password" name="password" required>
+
+                <input class="button-primary" type="submit" value="Log In">
+                <input class="button-primary" type="button" value="Forgot my password" onclick="showPasswordResetDialog()">
+                <a href="/register">
+                    <input class="button-primary" type="button" value="Register">
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>&copy; 2024 Diet Smart App. All rights reserved.</p>
+</footer>
+
+<script>
+    // Function to store the user email in localStorage
+    function storeUserEmail() {
+        var email = document.getElementById('email').value;
+        //Convert email to lowercase
+        email = email.toLowerCase();
+        localStorage.setItem('email', email);
+    }
+
+    // Function to show a box for password reset
+    function showPasswordResetDialog() {
+        // Prompt user to enter their email address
+        var email = prompt("Please enter your email address:");
+
+        // Check if the email was entered
+        if (email) {
+            alert("New password sent to your email");
+        }
+    }
+</script>
+</body>
+</html>

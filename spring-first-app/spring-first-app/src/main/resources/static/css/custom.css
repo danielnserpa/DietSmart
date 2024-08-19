@@ -1,0 +1,117 @@
+/* Body Styling */
+body {
+    background-image: url("../images/green-vegetables.jpg"); /* Path to your background image */
+    background-size: cover; /* Adjust the image to cover the entire background */
+    background-position: center center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    background-attachment: fixed; /* Make the background image fixed during scroll */
+}
+
+.image-gallery {
+    display: flex;               /* Use flexbox for horizontal layout */
+    justify-content: space-around; /* Evenly space items along the container */
+    align-items: center;         /* Vertically center the items */
+    text-align: center;          /* Center-align the text */
+    margin-top: 20px;            /* Top margin for the container */
+}
+
+.image-container {
+    flex: 1;                     /* Each image container takes up equal space */
+    margin: 0 10px;              /* Horizontal spacing between containers */
+}
+
+.image-container img {
+    max-width: 100%;             /* Fit the image within the container */
+    height: auto;                /* Maintain the image's aspect ratio */
+    display: block;              /* Remove space below the images */
+    margin: 0 auto;              /* Center the image horizontally within the container */
+}
+
+.image-container p {
+    margin-top: 10px;            /* Spacing between the image and the text */
+}
+
+.header {
+    display: flex;                 /* Use flexbox for header layout */
+    justify-content: space-between; /* Space items along the container */
+    align-items: center;           /* Vertically center the items */
+    padding: 10px 20px;            /* Padding inside the header */
+    background-color: #f8f8f8;     /* Background color of the header (adjust as needed) */
+    border-bottom: 1px solid #ddd; /* Bottom separator line */
+}
+
+.header img {
+    height: 70px;                  /* Increase the logo height */
+}
+
+.header .nav-buttons {
+    display: flex;                 /* Use flexbox for the buttons */
+}
+
+.header .nav-buttons a {
+    margin-left: 10px;             /* Spacing between the buttons */
+}
+
+.header .nav-buttons input {
+    padding: 10px 20px;            /* Padding inside the buttons */
+    border: none;                  /* Remove button borders */
+    font-size: 15px;               /* Increase button font size */
+    cursor: pointer;               /* Pointer cursor on hover */
+    margin-bottom: -1px;           /* Adjust distance between the button and the separator line */
+    transition: color 0.3s;        /* Smooth transition for text color change */
+}
+
+.header .nav-buttons input:hover {
+    color: #1e7ecb;                /* Text color on hover (adjust as needed) */
+}
+
+/* Tooltip Styles */
+.tooltip {
+    position: relative;            /* Position relative to the containing element */
+    display: inline-block;         /* Inline-block to allow positioning and spacing */
+    cursor: pointer;               /* Pointer cursor on hover */
+    border: 1px solid black;       /* Border for the tooltip */
+    padding: 2px 7px;              /* Padding inside the tooltip */
+    border-radius: 100px;          /* Rounded corners for the tooltip */
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;            /* Initially hidden */
+    width: 400px;                  /* Width of the tooltip */
+    background-color: black;       /* Background color of the tooltip */
+    color: #fff;                   /* Text color inside the tooltip */
+    text-align: center;            /* Center-align the text */
+    border-radius: 5px;            /* Rounded corners */
+    padding: 5px 10px;             /* Padding inside the tooltip */
+    position: absolute;            /* Absolute position for placement */
+    z-index: 1;                    /* Ensure it is above other elements */
+    bottom: 100%;                  /* Place above the text */
+    left: 50%;                     /* Center horizontally */
+    margin-left: -100px;           /* Adjust horizontal centering */
+    margin-top: 5px;               /* Spacing above the text */
+    opacity: 0;                    /* Initial opacity for fade effect */
+    transition: opacity 0.3s;      /* Smooth transition for opacity */
+}
+
+.tooltip .tooltiptext::after {
+    content: "";                   /* Empty content for the arrow */
+    position: absolute;            /* Absolute position for the arrow */
+    top: 100%;                     /* Position at the bottom of the tooltip */
+    left: 50%;                     /* Center horizontally */
+    margin-left: -5px;             /* Adjust horizontal centering */
+    border-width: 5px;             /* Size of the arrow */
+    border-style: solid;           /* Solid arrow */
+    border-color: black transparent transparent transparent; /* Arrow color and direction */
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;           /* Show the tooltip on hover */
+    opacity: 1;                    /* Fully opaque on hover */
+}
+
+/* Footer Styles */
+.footer {
+    text-align: center;            /* Center-align the footer text */
+    border-top: 1px solid #ddd;    /* Top border for the footer */
+    padding: 27px;                 /* Padding inside the footer */
+}

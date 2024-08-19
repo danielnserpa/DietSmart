@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs -->
+    <meta charset="utf-8">
+    <title>Dashboard</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT -->
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
+</head>
+<body>
+
+<!-- Header with logo button -->
+<div class="header">
+    <a href="/">
+        <img src="/images/logo.png" alt="Logo">
+    </a>
+    <div class="nav-buttons">
+    <a href="profile">
+        <input type="button" value="profile">
+    </a>
+    <input type="button" value="log out" onclick="logout()">
+</div>
+</div>
+
+<!-- Primary Page Layout -->
+<div class="container">
+    <div class="row">
+        <!-- Left Column -->
+        <div class="one-half column" style="margin-top: 25%">
+            <h5><span id="firstName"></span>'s Personal Information</h5>
+            <form method="post">
+                <!-- Goal Field -->
+                <label for="goal">Goal</label>
+                <input class="u-full-width" type="text" id="goal" name="goal" placeholder="Your goal" readonly>
+
+                <!-- BMR and TDEE Fields -->
+                <div class="row">
+                    <div class="six columns">
+                        <label for="bmr">BMR<div class="tooltip">?
+                            <span class="tooltiptext">Basal Metabolic Rate. The amount of calories your body burns a day just to survive.</span>
+                        </div></label>
+                        <input class="u-full-width" type="text" step="0.1" id="bmr" name="bmr" placeholder="X kcal/day" readonly>
+                    </div>
+                    <div class="six columns">
+                        <label for="tdee">TDEE<div class="tooltip">?
+                            <span class="tooltiptext">Total Daily Energy Expenditure. The amount of calories your body burns a day to perform everything you have to.</span>
+                        </div></label>
+                        <input class="u-full-width" type="text" step="0.1" id="tdee" name="tdee" placeholder="X kcal/day" readonly>
+                    </div>
+                </div>
+
+                <!-- Recommended Water Intake Field -->
+                <label for="waterIntake">Recommended Water Intake</label>
+                <input class="u-full-width" type="text" step="0.1" id="waterIntake" name="waterIntake" placeholder="X mls/day" readonly>
+
+                <!-- BMI and Hip-to-Waist Ratio Fields -->
+                <div class="row">
+                    <div class="six columns">
+                        <label>Current BMI - kg/m²</label>
+                        <input class="u-full-width" type="text" step="0.1" id="bmiCurrent" name="bmiCurrent" placeholder="Current BMI" readonly>
+                        <label>Recommended BMI</label>
+                        <input class="u-full-width" type="text" step="0.1" id="bmiRecommended" name="bmiRecommended" placeholder="18.5 to 24.9 - Normal weight" readonly>
+                    </div>
+                    <div class="six columns">
+                        <label>Hip-to-Waist Ratio</label>
+                        <input class="u-full-width" type="text" step="0.1" id="htw" name="htw" placeholder="Current Ratio" readonly>
+                        <label>Health Risk</label>
+                        <input class="u-full-width" type="text" step="0.1" id="healthrisk" name="healthrisk" placeholder="Your health risk" readonly>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right Column -->
+        <div class="one-half column" style="margin-top: 25%">
+            <h5 id="dietPlanTitle">Diet Plan</h5>
+            <form method="post">
+                <!-- Meal 1 -->
+                <label for="meal1">Meal 1</label>
+                <textarea class="u-full-width" id="meal1" name="meal1" placeholder="Details for Meal 1" readonly></textarea>
+
+                <!-- Meal 2 -->
+                <label for="meal2">Meal 2</label>
+                <textarea class="u-full-width" id="meal2" name="meal2" placeholder="Details for Meal 2" readonly></textarea>
+
+                <!-- Meal 3 -->
+                <label for="meal3">Meal 3</label>
+                <textarea class="u-full-width" id="meal3" name="meal3" placeholder="Details for Meal 3" readonly></textarea>
+
+                <!-- Meal 4 -->
+                <label for="meal4">Meal 4</label>
+                <textarea class="u-full-width" id="meal4" name="meal4" placeholder="Details for Meal 4" readonly></textarea>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>&copy; 2024 Diet Smart App. All rights reserved.</p>
+</footer>
+
+<script>
+
+    // Define diet plans for weight loss
+    const weightLossDiets = [
+        // 1200kcal
+        {
+            meal1: "150g Greek yogurt (1 cup) with 75g berries (1/2 cup) and 15g chia seeds (1 tablespoon)",
+            meal2: "100g grilled chicken breast (about 1 small breast) with a large salad (mixed greens, cucumber, tomato) and 15ml balsamic vinaigrette (1 tablespoon)",
+            meal3: "150g baked salmon (about 1 small fillet) with 90g quinoa (1/2 cup cooked) and 100g steamed broccoli (1 cup)",
+            meal4: "1 medium apple (about 180g) with 16g almond butter (1 tablespoon)"
+        },
+        // 1500kcal
+        {
+            meal1: "240g cooked oatmeal (1 cup cooked) with 1 banana (about 120g) and 10g flaxseeds (1 tablespoon)",
+            meal2: "Turkey wrap with 100g turkey breast (about 1 small slice), whole wheat tortilla (1 tortilla), lettuce, tomato, and 15ml mustard (1 tablespoon)",
+            meal3: "150g grilled chicken (about 1 small breast) with 150g sweet potato (1 medium potato) and 100g green beans (1 cup)",
+            meal4: "200g cottage cheese (1 cup) with pineapple chunks (about 100g)"
+        },
+        // 1800kcal
+        {
+            meal1: "Smoothie with 30g spinach (1 cup), 1 banana (about 120g), 75g blueberries (1/2 cup), 25g protein powder (1 scoop), and 240ml almond milk (1 cup)",
+            meal2: "Tuna salad with 150g tuna (1 small can), mixed greens (1 cup), cherry tomatoes (100g), with 15ml olive oil (1 tablespoon) and vinegar (1 tablespoon)",
+            meal3: "Lean beef stir-fry with 150g beef (about 1 small portion), bell peppers (100g), onions (50g), and 185g brown rice (1 cup cooked)",
+            meal4: "200g Greek yogurt (1 cup) with a handful of walnuts (about 30g)"
+        },
+        // 2200kcal
+        {
+            meal1: "Scrambled eggs (3 eggs) with 50g spinach (1 cup), 50g mushrooms (1/2 cup), and 1 slice whole grain toast",
+            meal2: "200g chicken breast (about 1 medium breast) with 185g quinoa (1 cup cooked) and a side of mixed vegetables (150g, about 1 cup)",
+            meal3: "200g salmon (about 1 medium fillet) with 185g wild rice (1 cup cooked) and 150g steamed asparagus (1 cup)",
+            meal4: "30g mixed nuts (about 1/4 cup) and 1 orange (about 130g)"
+        },
+        // 2600kcal
+        {
+            meal1: "Smoothie with 30g spinach (1 cup), 1 banana (about 120g), 75g strawberries (1/2 cup), 30g protein powder (2 tablespoons), and 240ml milk (1 cup)",
+            meal2: "Turkey meatballs (200g) with 185g whole grain pasta (1 cup cooked) and marinara sauce",
+            meal3: "Baked chicken (250g) with 185g brown rice (1 cup cooked) and roasted Brussels sprouts (150g, about 1 cup)",
+            meal4: "200g Greek yogurt (1 cup) with 15g honey (1 tablespoon) and 30g granola (1/4 cup)"
+        }
+    ];
+
+    // Define diet plans for muscle gain
+    const muscleGainDiets = [
+        // 1700 kcal
+        {
+            meal1: "Scrambled eggs (3 eggs) with 30g whole grain toast (1 slice)",
+            meal2: "150g grilled chicken breast (about 1 small breast) with 90g brown rice (1/2 cup cooked) and mixed vegetables (150g, about 1 cup)",
+            meal3: "200g Greek yogurt (1 cup) with 15g honey (1 tablespoon) and 30g granola (1/4 cup)",
+            meal4: "Protein shake with 30g whey protein powder (1 scoop) and 240ml almond milk (1 cup)"
+        },
+        // 2300 kcal
+        {
+            meal1: "Smoothie with 30g spinach (1 cup), 1 banana (about 120g), 75g blueberries (1/2 cup), 30g protein powder (2 tablespoons), and 240ml milk (1 cup)",
+            meal2: "Turkey sandwich with 100g turkey breast (about 1 small slice), 2 slices whole grain bread, avocado (50g), lettuce, and tomato",
+            meal3: "Beef stir-fry with 200g beef (about 1 small portion), bell peppers (100g), onions (50g), and 185g brown rice (1 cup cooked)",
+            meal4: "200g cottage cheese (1 cup) with pineapple (100g)"
+        },
+        // 2700kcal
+        {
+            meal1: "Oatmeal (240g cooked) with 30g almond butter (2 tablespoons) and 1 banana (about 120g)",
+            meal2: "200g grilled chicken breast (about 1 medium breast) with 185g quinoa (1 cup cooked) and steamed broccoli (150g, about 1 cup)",
+            meal3: "200g salmon (about 1 medium fillet) with 185g wild rice (1 cup cooked) and mixed vegetables (150g, about 1 cup)",
+            meal4: "200g Greek yogurt (1 cup) with 15g honey (1 tablespoon), 30g granola (1/4 cup), and a handful of mixed nuts (30g)"
+        },
+        // 3100kcal
+        {
+            meal1: "Smoothie with 30g spinach (1 cup), 1 banana (about 120g), 75g strawberries (1/2 cup), 30g protein powder (2 tablespoons), and 240ml whole milk (1 cup)",
+            meal2: "Turkey meatballs (200g) with 185g whole grain pasta (1 cup cooked) and marinara sauce",
+            meal3: "Baked chicken thighs (250g) with 185g brown rice (1 cup cooked) and roasted vegetables (150g, about 1 cup)",
+            meal4: "200g Greek yogurt (1 cup) with 15g honey (1 tablespoon) and 30g granola (1/4 cup)"
+        },
+        // 3700kcal
+        {
+            meal1: "Whole grain pancakes (3 pancakes) with 15ml maple syrup (1 tablespoon) and scrambled eggs (3 eggs)",
+            meal2: "Grilled steak (250g) with 185g quinoa (1 cup cooked) and a side of sautéed vegetables (150g, about 1 cup)",
+            meal3: "300g chicken breast (about 1 large breast) with 185g brown rice (1 cup cooked) and steamed broccoli (150g, about 1 cup)",
+            meal4: "Protein shake with 60g whey protein powder (2 scoops) and 240ml whole milk (1 cup)"
+        }
+    ];
+
+    // Function to select a diet based on TDEE and goal
+    function selectDiet(goal, tdee) {
+        let diet;
+        let calories;
+        let message = '';
+
+        // Determine the diet plan based on goal
+        if (goal === 'weight_loss') {
+            if (tdee <= 1200) {
+                message = "Your daily energy expenditure is lower in calories than our least caloric diet. Following it won't help you to achieve your goal";
+                return {message};
+            } else if (tdee >= 1200 && tdee <= 1600) {
+                diet = weightLossDiets[0];
+                calories = 1200;
+            } else if (tdee > 1600 && tdee <= 1900) {
+                diet = weightLossDiets[1];
+                calories = 1500;
+            } else if (tdee > 1900 && tdee <= 2300) {
+                diet = weightLossDiets[2];
+                calories = 1800;
+            } else if (tdee > 2301 && tdee <= 2800) {
+                diet = weightLossDiets[3];
+                calories = 2200;
+            } else {
+                diet = weightLossDiets[4];
+                calories = 2600;
+            }
+        } else if (goal === 'muscle_gain') {
+            if (tdee <= 1699) {
+                diet = muscleGainDiets[0];
+                calories = 1700;
+            } else if (tdee > 1700 && tdee <= 2200) {
+                diet = muscleGainDiets[1];
+                calories = 2300;
+            } else if (tdee > 2200 && tdee <= 2600) {
+                diet = muscleGainDiets[2];
+                calories = 2700;
+            } else if (tdee > 2600 && tdee <= 3000) {
+                diet = muscleGainDiets[3];
+                calories = 3100;
+            } else if(tdee > 3000 && tdee <= 3600) {
+                diet = muscleGainDiets[4];
+                calories = 3700;
+            } else {
+                message = "Your daily energy expenditure is higher in calories than our most caloric diet. Following it won't help you to achieve your goal";
+                return {message};
+            }
+        }
+        return { diet, calories, message };
+    }
+    // Event listener for when the window has fully loaded
+    window.addEventListener('load', function () {
+
+        // Retrieve the stored email and user data from localStorage
+        var email = localStorage.getItem('email');
+        var user = JSON.parse(localStorage.getItem(email));
+
+        // Display the user's first name if it exists
+        if (user.firstName) {
+            document.getElementById('firstName').textContent = user.firstName;
+        }
+
+        // Display the user's goal in a readable format
+        var goal = user.goal;
+        if (goal) {
+            // Convert stored value to proper casing
+            if (goal === 'weight_loss') {
+                goal = 'Weight Loss';
+            } else if (goal === 'muscle_gain') {
+                goal = 'Muscle Gain';
+            }
+            document.getElementById('goal').value = goal;
+        }
+
+        // Calculate and display the recommended water intake based on weight
+        var weight = user.weight;
+        if (weight) {
+            document.getElementById('waterIntake').value = Number(weight) * 40 + ' mls/day';
+        }
+
+        // Display BMR, TDEE, BMI, and health risk if they exist
+        if (user) {
+            var bmr = user.bmr;
+            if (bmr) {
+                document.getElementById('bmr').value = bmr.toFixed(1) + ' kcal/day';
+            }
+            var tdee = user.tdee;
+            if (tdee) {
+                document.getElementById('tdee').value = tdee.toFixed(1) + ' kcal/day';
+            }
+            var bmi = user.bmi;
+            if (bmi) {
+                var bmiValue = bmi.toFixed(1);
+                var bmiClassification = getBMIClassification(bmi);
+
+                // Display BMI value and classification
+                document.getElementById('bmiCurrent').value = bmiValue + ' - ' + bmiClassification;
+
+                // Set recommended BMI range
+                document.getElementById('bmiRecommended').value = "18.5 to 24.9 kg/m²";
+            }
+            var htw = user.htw;
+            if (htw) {
+                document.getElementById('htw').value = htw.toFixed(2);
+                var sex = user.sex;
+                var healthRisk = calculateHealthRisk(sex, htw);
+                document.getElementById('healthrisk').value = healthRisk;
+            }
+
+            // Select and display the appropriate diet plan based on the user's goal and TDEE
+            var result = selectDiet(user.goal, user.tdee);
+            var selectedDiet = result.diet;
+            var calories = result.calories;
+            var message = result.message;
+
+            if (message) {
+                // Display an error message if no diet plan is available
+                document.getElementById('dietPlanTitle').textContent = `We can't help you :(`;
+                document.getElementById('meal1').value = message;
+                document.getElementById('meal2').value = message;
+                document.getElementById('meal3').value = message;
+                document.getElementById('meal4').value = message;
+            } else {
+                // Display the diet plan
+                document.getElementById('dietPlanTitle').textContent = `Diet Plan - ${calories} kcal`;
+                document.getElementById('meal1').value = selectedDiet.meal1;
+                document.getElementById('meal2').value = selectedDiet.meal2;
+                document.getElementById('meal3').value = selectedDiet.meal3;
+                document.getElementById('meal4').value = selectedDiet.meal4;
+            }
+        }
+    });
+
+    // Function to determine BMI classification
+    function getBMIClassification(bmi) {
+        if (bmi < 18.5) {
+            return 'Underweight';
+        } else if (bmi >= 18.5 && bmi < 25) {
+            return 'Normal Weight';
+        } else if (bmi >= 25 && bmi < 30) {
+            return 'Overweight';
+        } else {
+            return 'Obese';
+        }
+    }
+
+    // Function to calculate health risk based on sex and hip-to-waist ratio
+    function calculateHealthRisk(sex, htw) {
+        if (sex === 'male') {
+            if (htw <= 0.95) {
+                return 'Low Risk';
+            } else if (htw >= 0.96 && htw <= 1.00) {
+                return 'Medium Risk';
+            } else {
+                return 'High Risk';
+            }
+        } else if (sex === 'female') {
+            if (htw <= 0.80) {
+                return 'Low Risk';
+            } else if (htw >= 0.81 && htw <= 0.84) {
+                return 'Medium Risk';
+            } else {
+                return 'High Risk';
+            }
+        }
+    }
+
+    // Function to handle user logout
+    function logout() {
+        // Clear localStorage
+        localStorage.removeItem('email');
+
+
+        // Redirect to login page
+        window.location.href = '/login'; // Replace with your login page URL
+    }
+</script>
+
+</body>
+</html>

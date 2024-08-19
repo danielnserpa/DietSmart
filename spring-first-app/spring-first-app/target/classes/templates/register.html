@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <!-- Basic Page Needs -->
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT -->
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+
+<!-- Header with logo -->
+<div class="header">
+    <a href="/">
+        <img src="/images/logo.png" alt="Logo">
+    </a>
+    <div class="nav-buttons">
+    <a href="login">
+        <input type="button" value="log in">
+    </a>
+</div>
+</div>
+
+<!-- Primary Page Layout -->
+<div class="container">
+    <div class="row">
+        <div class="one-half column" style="margin-top: 25%">
+            <h4>Register</h4>
+            <!-- Display error message if the email is already registered -->
+            <div th:if="${param.error}">
+                <p style="color: red;">This email is already registered.</p>
+            </div>
+            <form method="post" action="/register" onsubmit="return storeUserName()">
+                <label for="email">Email</label>
+                <input class="u-full-width" type="email" placeholder="test@mailbox.com" id="email" name="email" required>
+
+                <label for="firstName">First Name</label>
+                <input class="u-full-width" type="text" placeholder="First Name" id="firstName" name="firstName" required>
+
+                <label for="lastName">Last Name</label>
+                <input class="u-full-width" type="text" placeholder="Last Name" id="lastName" name="lastName" required>
+
+                <label for="password">Password</label>
+                <input class="u-full-width" type="password" placeholder="Password" id="password" name="password" required>
+
+                <label for="confirmPassword">Confirm Password</label>
+                <input class="u-full-width" type="password" placeholder="Confirm Password" id="confirmPassword" name="confirmPassword" required>
+
+                <input class="button-primary" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>&copy; 2024 Diet Smart App. All rights reserved.</p>
+</footer>
+
+<script>
+function storeUserName() {
+// Retrieve values from the form
+var firstName = document.getElementById('firstName').value;
+var email = document.getElementById('email').value;
+var lastName = document.getElementById('lastName').value;
+var password = document.getElementById('password').value;
+var confirmPassword = document.getElementById('confirmPassword').value;
+
+    // Check if the first name and last name contains only letters
+    var namePattern = /^[A-Za-z]+$/;
+    // Validate first name
+    if (!namePattern.test(firstName)) {
+        alert("First name must contain only letters.");
+        return false;
+    }
+    // Validate last name
+    if (!namePattern.test(lastName)) {
+        alert("Last name must contain only letters.");
+        return false;
+    }
+
+    // Check if the password is at least 6 characters long
+    if (password.length < 6) {
+        alert("Password must be at least 6 characters long.");
+        return false;
+    }
+
+    // Check if password = confirmPassword
+    if (password !== confirmPassword) {
+        alert("Passwords don't match.");
+        return false;
+    }
+
+    //Convert email to lowercase
+    email = email.toLowerCase();
+
+    // Convert the first letter to uppercase
+    firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+    lastName = lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
+
+    // Store user data in localStorage
+    localStorage.setItem(email, JSON.stringify({firstName, lastName}));
+    // Allow form submission
+    return true;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic Page Needs -->
+    <meta charset="utf-8">
+    <title>Profile</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT -->
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+
+<div class="header">
+    <a href="/">
+        <img src="/images/logo.png" alt="Logo">
+    </a>
+    <div class="nav-buttons">
+    <a href="dashboard">
+        <input type="button" value="dashboard">
+    </a>
+    <input type="button" value="log out" onclick="logout()">
+</div>
+</div>
+
+<div class="container">
+    <div class="row" >
+        <div class="one-half column" style="margin-top: 25%">
+            <h2>Welcome, <span id="firstName"></span></h2>
+            <h5>Complete your profile to get started</h5>
+            <form method="post" action="/profile" onsubmit="storeUserInfo()">
+
+                <input class="u-full-width" type="hidden" id="email" name="email" required readonly>
+
+                <label for="dob">Date of Birth</label>
+                <input class="u-full-width" type="date" id="dob" name="dob" required>
+
+                <label for="sex">Biological Sex</label>
+                <select class="u-full-width" id="sex" name="sex" required>
+                    <option value="" disabled selected>Select your sex</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+
+                <label for="height">Height (m)</label>
+                <input class="u-full-width" type="number" step="0.01" placeholder="Height in meters" id="height" name="height" required min="1.40" max="2.51">
+
+                <label for="weight">Weight (kg)</label>
+                <input class="u-full-width" type="number" step="0.1" placeholder="Weight in kilograms" id="weight" name="weight" required min="40" max="220">
+
+                <label for="hip">Hip (cm)<div class="tooltip">?<span class="tooltiptext">Your hips should be measured on the roundest part of your rear.</span>
+                </div></label>
+                <input class="u-full-width" type="number" step="0.1" placeholder="Hip circumference in cm" id="hip" name="hip" required min="60" max="150">
+
+                <label for="waist">Waist (cm)<div class="tooltip">?
+                    <span class="tooltiptext">Your waist should be measured on the narrowest part of your torso. Normally above your bellybutton.</span>
+                </div></label>
+                <input class="u-full-width" type="number" step="0.1" placeholder="Waist circumference in cm" id="waist" name="waist" required min="50" max="120">
+
+                <label for="pal">Physical Activity Level</label>
+                <select class="u-full-width" id="pal" name="pal" required>
+                    <option value="" disabled selected>Select your physical activity level</option>
+                    <option value="Sedentary">Sedentary - Little or no exercise</option>
+                    <option value="Lightly Active">Lightly Active - Light exercise 1-3x/week</option>
+                    <option value="Moderate Active">Moderate Active - Moderate exercise 3-5x/week</option>
+                    <option value="Very Active">Very Active - Hard exercise 6-7x/week</option>
+                    <option value="Super Active">Super Active - Very hard exercise 6-7x/week</option>
+                </select>
+
+                <label>Goal</label>
+                <label for="weight_loss" class="goal-option">
+                    <input type="radio" id="weight_loss" name="goal" value="weight_loss" required>
+                    Weight Loss
+                </label>
+                <label for="muscle_gain" class="goal-option">
+                    <input type="radio" id="muscle_gain" name="goal" value="muscle_gain" required>
+                    Muscle Gain
+                </label>
+
+                <input class="button-primary" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <p>&copy; 2024 Diet Smart App. All rights reserved.</p>
+</footer>
+
+<script>
+    // Function to store user profile information in localStorage
+    function storeUserInfo () {
+    // Retrieve the stored email and user data from localStorage
+        var email = localStorage.getItem('email');
+        var user = JSON.parse(localStorage.getItem(email));
+
+        // Collect form values
+        var dob = document.getElementById('dob').value;
+        var sex = document.getElementById('sex').value;
+        var height = document.getElementById('height').value;
+        var weight = document.getElementById('weight').value;
+        var hip = document.getElementById('hip').value;
+        var waist = document.getElementById('waist').value;
+        var goal = document.querySelector('input[name="goal"]:checked').value;
+        var pal = document.getElementById('pal').value;
+
+        // Calculate age, BMR, TDEE, BMI, and Waist-to-Hip Ratio
+        var age = calculateAge(dob);
+        var bmr = calculateBMR(sex, weight, height, age);
+        var tdee = calculateTDEE(bmr, pal);
+        var bmi = calculateBMI(height, weight);
+        var htw = calculateHtW(hip, waist);
+
+        // Update user object with new information and store it in localStorage
+        localStorage.setItem(email, JSON.stringify({...user, dob, sex, height, weight, hip, waist, goal, age, pal, bmr, tdee, bmi, htw}));
+    }
+
+    // Function to calculate age from date of birth
+    function calculateAge(dob) {
+        var birthDate = new Date(dob);
+        var ageDifMs = Date.now() - birthDate.getTime();
+        var ageDate = new Date(ageDifMs);
+        return Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
+
+    // Function to calculate BMR based on sex, weight, height, and age
+    function calculateBMR(sex, weight, height, age) {
+        if (sex === 'male') {
+            return 88.362 + (13.397 * weight) + (4.799 * height * 100) - (5.677 * age);
+        } else if (sex === 'female') {
+            return 447.593 + (9.247 * weight) + (3.098 * height * 100) - (4.330 * age);
+        }
+    }
+
+    // Function to calculate TDEE based on BMR and physical activity level
+    function calculateTDEE(bmr, pal) {
+        if (pal === 'Sedentary') {
+            return bmr * 1.2;
+        } else if (pal === 'Lightly Active') {
+            return bmr * 1.375;
+        } else if (pal === 'Moderate Active') {
+            return bmr * 1.55;
+        } else if (pal === 'Very Active') {
+            return bmr * 1.725;
+        } else if (pal === 'Super Active') {
+            return bmr * 1.9;
+        }
+    }
+
+    // Function to calculate BMI based on height and weight
+    function calculateBMI(height, weight) {
+        if (height && weight) {
+            return weight / Math.pow(height, 2);
+        }
+    }
+
+    // Function to calculate Waist-to-Hip Ratio
+    function calculateHtW(hip, waist){
+        if (hip && waist) {
+            return waist / hip;
+        }
+    }
+
+    // Event listener for the page load to initialize form fields and constraints
+    window.addEventListener('load', function() {
+
+        // Set date of birth input constraints for ages between 18 and 115
+        var today = new Date();
+        var maxDob = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+        var minDob = new Date(today.getFullYear() - 115, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+
+        // Set constraints for height, weight, hip, and waist inputs
+        document.getElementById('dob').setAttribute('max', maxDob);
+        document.getElementById('dob').setAttribute('min', minDob);
+        document.getElementById('height').setAttribute('min', '1.40');
+        document.getElementById('height').setAttribute('max', '2.51');
+        document.getElementById('weight').setAttribute('min', '40');
+        document.getElementById('weight').setAttribute('max', '220');
+        document.getElementById('hip').setAttribute('min', '60');
+        document.getElementById('hip').setAttribute('max', '150');
+        document.getElementById('waist').setAttribute('min', '50');
+        document.getElementById('waist').setAttribute('max', '120');
+
+        // Populate form fields with stored user data
+        var email = localStorage.getItem('email');
+        var user = JSON.parse(localStorage.getItem(email));
+
+        console.log(user);
+
+        if (user) {
+            // Set form field values based on stored user data
+            document.getElementById('email').value = email;
+            document.getElementById('firstName').innerText = user.firstName;
+            document.getElementById('dob').value = user.dob;
+            if (user.sex) {
+             document.getElementById('sex').value = user.sex;
+            }
+            document.getElementById('height').value = user.height;
+            document.getElementById('weight').value = user.weight;
+            document.getElementById('hip').value = user.hip;
+            document.getElementById('waist').value = user.waist;
+            if (user.pal) {
+                document.getElementById('pal').value = user.pal;
+            }
+            if (user.goal && user.goal === 'weight_loss') {
+                document.getElementById('weight_loss').checked = true;
+            }
+            if (user.goal && user.goal === 'muscle_gain') {
+                document.getElementById('muscle_gain').checked = true;
+            }
+        }
+    });
+
+    function logout() {
+        // Clear localStorage
+        localStorage.removeItem('email');
+
+        // Redirect to login page
+        window.location.href = '/login'; // Replace with your login page URL
+    }
+
+</script>
+
+</body>
+</html>
